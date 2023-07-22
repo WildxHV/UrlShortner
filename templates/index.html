@@ -5,124 +5,121 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous">
-        </script>
+    <title>URL Shortener</title>
 
     <style>
-        .main{
+        body {
+            min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            flex-direction: column;
-            width: 100%;
-            height: 500px;
+            align-items: center;
+            margin: 0;
+            background-color: #f1f1f1;
+            font-family: Arial, sans-serif;
         }
 
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
 
-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-}
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
 
-body {
-  min-height: 90vh;
-  font-family: Karla, sans-serif;
-  line-height: 2;
-}
+        .input-container {
+            display: flex;
+        }
 
-.container {
-  max-width: 720px;
-  width: 75%;
-  border: 2.5px solid #6b5784;
-  border-radius: 5px;
-  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
-}
+        #link {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            outline: none;
+        }
 
-h1 {
-  padding: 1rem;
-  color: white;
-}
+        #shorten {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #6b5784;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-input,
-button {
-  font-family: inherit;
-  line-height: inherit;
-  color: inherit;
-  border: 0;
-  padding: 15px;
-}
+        #shorten:hover {
+            background-color: #5b4a6f;
+        }
 
-input {
-  box-sizing: border-box;
-  width: 100%;
-}
+        #shorten:focus {
+            outline: none;
+        }
 
-.btn {
-  display: flex;
-}
+        #shorten:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-button {
-  cursor: pointer;
-  flex: 1;
-  background-color: transparent;
-  color: white;
- 
-}
+        #shorten:disabled:hover {
+            background-color: #ccc;
+        }
 
-section {
-  min-height: 80px;
-  text-align: center;
-  background-color: white;
-}
+        #section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #newlink {
+            text-decoration: none;
+            color: #6b5784;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 
 <body>
-    <div class="main">
-        <div class="container">
-            <h1>Url Shortener</h1>
-            <form id="post-form">
-                {% csrf_token %}
-                <input type="text" name="link" id="link" placeholder="Enter Your url here">
-                <div class="btn">
-
-                    <button type="submit" id="shorten">Shorten</button>
-                </div>
-
-            </form>
-        </div>
-
+    <div class="container">
+        <div class="title">URL Shortener</div>
+        <form id="post-form" class="input-container">
+            {% csrf_token %}
+            <input type="text" name="link" id="link" placeholder="Enter Your URL here">
+            <button type="submit" id="shorten">Shorten</button>
+        </form>
         <section id="section">
-           <a id="newlink" href=""> <h2 ></h2> </a>
+            <a id="newlink" href=""><h2></h2></a>
         </section>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).on('submit', '#post-form', function (e) {
+            e.preventDefault();
 
-</body>
-
-<script type="text/javascript">
-    $(document).on('submit', '#post-form', function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            url: '/create',
-            data: {
-                link: $('#link').val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (data) {
-                $('h2').html("https://hv02-shorturl.herokuapp.com/" + data)
-                document.getElementById('newlink').href = "https://hv02-shorturl.herokuapp.com/" + data;
-
-            }
+            $.ajax({
+                type: 'POST',
+                url: '/create',
+                data: {
+                    link: $('#link').val(),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function (data) {
+                    $('h2').html("https://hv02-shorturl.herokuapp.com/" + data);
+                    document.getElementById('newlink').href = "https://hv02-shorturl.herokuapp.com/" + data;
+                }
+            });
         });
-    });
-</script>
+    </script>
+</body>
 
 </html>
